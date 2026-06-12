@@ -1,2 +1,2 @@
 # FitHub-Smart-Fitness-Assistant-using-Computer-Vision
-FitHub leverages AI, OpenCV, and MediaPipe to detect and count bicep curl repetitions while analyzing exercise form. The system delivers real-time feedback on posture and movement, helping users maintain proper technique and reduce injury risks.
+FitHub is an intelligent fitness monitoring system built with Python, OpenCV, and MediaPipe. It detects bicep curl movements, counts repetitions, and analyzes posture in real time, offering users accurate feedback to improve exercise technique and workout performance.
