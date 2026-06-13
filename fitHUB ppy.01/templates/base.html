@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head> 
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title> 
+    <meta name="description" content=""> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/release/v5.8.1/css/all.css"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dialog.css') }}">  
+    {% block head %}      
+    {% endblock %}       
+    <style>
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);  
+            z-index: 1;
+            margin-top: 13px;  
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block; 
+        }
+        .dropdown-content a:hover {background-color: #ddd;}
+        .show {display:block;}
+
+        /* FIX: Make popup visible and properly layered */
+        .popup-overlay {
+            display: flex;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-overlay.hidden {
+            display: none;
+        }
+    </style>
+</head>
+  
+<body>
+    <header>
+        <a href="/" ><img width="255px" height="90px" src="{{url_for('static',filename='images/newlogo.png')}}" alt=""></a>
+        <p class="tagline">Where Fitness Meets Happiness.</p>
+        <img style="filter: invert(1);" height="90px" width="100px" class="im" src="{{ url_for('static', filename='images/logo1.png') }}"> 
+    </header>        
+
+    <nav>
+        <ul>
+            <li><a href="/" class="tb"><b>HOME</b></a></li>     
+            <li>  
+                <a href="#" onclick="dropdownExercise()"><b>EXERCISE</b></a>      
+                <div id="myDropdown1" class="dropdown-content">     
+                    <a href="/exercise/biceps-curl">Bicep-Curl</a> 
+                    <a href="/exercise/push-ups">Push-Ups</a>       
+                    <a href="/exercise/triceps">Triceps</a>     
+                    <a href="/exercise/squats">Squats</a>  
+                </div>           
+            </li> 
+            <li>
+                <a href="#" onclick="dropdownYoga()"><b>YOGA</b></a>           
+                <div id="myDropdown2" class="dropdown-content"> 
+                    <a href="/yoga/t-pose">T Pose</a>       
+                    <a href="/yoga/tree-pose">Tree Pose</a>     
+                    <a href="/yoga/warrior-pose">Warrior Pose</a> 
+                </div>
+            </li>
+            <li><a href ='/bmi'><b>BMI CALCULATOR</b></a></li>   
+            <li><a href="/about"><b>ABOUT</b></a></li>        
+        </ul>
+    </nav>
+
+    <script>
+        function dropdownExercise() {        
+            document.getElementById("myDropdown1").classList.toggle("show");
+        } 
+        function dropdownYoga() { 
+            document.getElementById("myDropdown2").classList.toggle("show");
+        }
+
+        // ✅ FIX: Global popup functions used by all exercise/yoga pages
+        function closePopup() {
+            var overlay = document.querySelector('.popup-overlay');
+            if (overlay) overlay.classList.add('hidden');
+        }
+
+        function openVideo(activity) {
+    var div = document.getElementById('div-1'); 
+    div.innerHTML = `<iframe id="video-iframe" style="border:2px solid #fc6d6d;" src="/${activity}" width="640" height="480"></iframe>`;
+}
+
+function closeVideo() { 
+    var iframe = document.getElementById('video-iframe');
+    if (iframe) iframe.parentNode.removeChild(iframe);  
+}
+
+        // ✅ FIX: Wire OK and CLOSE buttons after DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            var okBtn = document.getElementById('popup-button1');
+            var closeBtn = document.getElementById('popup-button2');
+
+            if (okBtn) {
+                okBtn.addEventListener('click', function() {
+                    closePopup();
+                });
+            }
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    // CLOSE button goes back to previous page
+                    window.history.back();
+                });
+            }
+        });
+    </script>
+
+    {% block content %}      
+    {% endblock %}   
+
+    <!-- ✅ FIX: Removed async defer so script loads synchronously -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

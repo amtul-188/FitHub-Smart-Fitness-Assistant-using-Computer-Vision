@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% block head %}
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.hero{min-height:88vh;background:linear-gradient(135deg,#0d0d0d 0%,#1a0a00 50%,#0d0d0d 100%);display:flex;align-items:center;justify-content:center;padding:40px 20px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(252,109,109,0.12) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.hero-inner{display:flex;align-items:center;justify-content:space-between;max-width:1100px;width:100%;gap:48px;flex-wrap:wrap}
+.hero-text{flex:1;min-width:300px}
+.hero-badge{display:inline-block;background:rgba(252,109,109,0.15);border:1px solid rgba(252,109,109,0.4);color:#fc6d6d;font-family:'Quicksand',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;border-radius:20px;margin-bottom:24px}
+.hero-title{font-family:'Quicksand',sans-serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:700;color:#fff;line-height:1.15;margin-bottom:20px}
+.hero-title span{color:#fc6d6d}
+.hero-sub{font-family:'Quicksand',sans-serif;font-size:1.1rem;color:#aaa;line-height:1.7;margin-bottom:36px;max-width:460px}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap}
+.btn-primary{background:#fc6d6d;color:#fff;font-family:'Quicksand',sans-serif;font-weight:700;font-size:1rem;padding:14px 32px;border:none;border-radius:50px;cursor:pointer;text-decoration:none;display:inline-block;transition:background 0.2s,transform 0.15s}
+.btn-primary:hover{background:#e85555;transform:translateY(-2px)}
+.btn-outline{background:transparent;color:#fff;font-family:'Quicksand',sans-serif;font-weight:700;font-size:1rem;padding:13px 32px;border:1.5px solid rgba(255,255,255,0.3);border-radius:50px;cursor:pointer;text-decoration:none;display:inline-block;transition:border-color 0.2s,color 0.2s,transform 0.15s}
+.btn-outline:hover{border-color:#fc6d6d;color:#fc6d6d;transform:translateY(-2px)}
+.hero-figure{flex:0 0 380px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#pose-canvas{border-radius:12px}
+.pose-label-wrap{text-align:center;margin-top:12px}
+.pose-label{display:inline-block;background:rgba(252,109,109,0.18);border:1px solid rgba(252,109,109,0.35);color:#fc6d6d;font-family:'Quicksand',sans-serif;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 18px;border-radius:20px}
+.stats-strip{background:#111;border-top:1px solid #222;display:flex;justify-content:center;flex-wrap:wrap}
+.stat-item{padding:28px 48px;text-align:center;border-right:1px solid #222}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:'Quicksand',sans-serif;font-size:2rem;font-weight:700;color:#fc6d6d}
+.stat-lbl{font-family:'Quicksand',sans-serif;font-size:0.8rem;color:#666;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
+.features{background:#0d0d0d;padding:80px 20px}
+.section-title{font-family:'Quicksand',sans-serif;font-size:2rem;font-weight:700;color:#fff;text-align:center;margin-bottom:12px}
+.section-sub{font-family:'Quicksand',sans-serif;color:#555;text-align:center;margin-bottom:48px;font-size:1rem}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;max-width:1000px;margin:0 auto}
+.feat-card{background:#161616;border:1px solid #222;border-radius:16px;padding:28px 24px;transition:border-color 0.2s,transform 0.2s;cursor:pointer;text-decoration:none;display:block}
+.feat-card:hover{border-color:#fc6d6d;transform:translateY(-4px)}
+.feat-icon{font-size:28px;margin-bottom:14px}
+.feat-title{font-family:'Quicksand',sans-serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:8px}
+.feat-desc{font-family:'Quicksand',sans-serif;font-size:0.86rem;color:#555;line-height:1.6}
+.how-section{background:#111;padding:80px 20px}
+.steps{display:flex;justify-content:center;flex-wrap:wrap;max-width:900px;margin:0 auto}
+.step{flex:1;min-width:180px;text-align:center;padding:24px 20px;position:relative}
+.step:not(:last-child)::after{content:'→';position:absolute;right:-12px;top:38px;color:#333;font-size:1.4rem}
+.step-num{width:52px;height:52px;background:rgba(252,109,109,0.15);border:2px solid rgba(252,109,109,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Quicksand',sans-serif;font-size:1.3rem;font-weight:700;color:#fc6d6d}
+.step-title{font-family:'Quicksand',sans-serif;font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:8px}
+.step-desc{font-family:'Quicksand',sans-serif;font-size:0.82rem;color:#666;line-height:1.5}
+.home-footer{background:#0a0a0a;border-top:1px solid #1a1a1a;padding:32px 20px;text-align:center}
+.home-footer p{font-family:'Quicksand',sans-serif;color:#444;font-size:0.85rem}
+.home-footer span{color:#fc6d6d}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge">AI-Powered Fitness</div>
+      <h1 class="hero-title">Train Smarter.<br>Move <span>Better.</span><br>Live Stronger.</h1>
+      <p class="hero-sub">Real-time pose detection powered by MediaPipe AI. Instant feedback on your form for exercises and yoga — all in your browser, no equipment needed.</p>
+      <div class="hero-btns">
+        <a href="/exercise/biceps-curl" class="btn-primary">Start Training</a>
+        <a href="/about" class="btn-outline">Learn More</a>
+      </div>
+    </div>
+    <div class="hero-figure">
+      <canvas id="pose-canvas" width="320" height="400"></canvas>
+      <div class="pose-label-wrap"><span class="pose-label" id="pose-name">Bicep Curl</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-item"><div class="stat-num">4</div><div class="stat-lbl">Exercises</div></div>
+  <div class="stat-item"><div class="stat-num">3</div><div class="stat-lbl">Yoga Poses</div></div>
+  <div class="stat-item"><div class="stat-num">AI</div><div class="stat-lbl">Pose Detection</div></div>
+  <div class="stat-item"><div class="stat-num">100%</div><div class="stat-lbl">Browser-Based</div></div>
+</div>
+
+<section class="features">
+  <h2 class="section-title">Everything You Need</h2>
+  <p class="section-sub">From beginner to advanced — track, correct, and improve.</p>
+  <div class="cards-grid">
+    <a href="/exercise/biceps-curl" class="feat-card"><div class="feat-icon">💪</div><div class="feat-title">Bicep Curls</div><div class="feat-desc">Live rep counter with elbow angle tracking and form feedback.</div></a>
+    <a href="/exercise/push-ups" class="feat-card"><div class="feat-icon">🏋️</div><div class="feat-title">Push-Ups</div><div class="feat-desc">Arm and leg angle detection to keep your body perfectly straight.</div></a>
+    <a href="/exercise/squats" class="feat-card"><div class="feat-icon">🦵</div><div class="feat-title">Squats</div><div class="feat-desc">Knee angle monitoring with automatic rep counting.</div></a>
+    <a href="/exercise/triceps" class="feat-card"><div class="feat-icon">🔥</div><div class="feat-title">Tricep Extensions</div><div class="feat-desc">Dual-arm tracking for balanced overhead extension form.</div></a>
+    <a href="/yoga/t-pose" class="feat-card"><div class="feat-icon">🧘</div><div class="feat-title">T-Pose</div><div class="feat-desc">Shoulder and elbow alignment check with instant correction cues.</div></a>
+    <a href="/yoga/tree-pose" class="feat-card"><div class="feat-icon">🌿</div><div class="feat-title">Tree Pose</div><div class="feat-desc">Balance and knee position detection for stable standing yoga.</div></a>
+    <a href="/yoga/warrior-pose" class="feat-card"><div class="feat-icon">⚔️</div><div class="feat-title">Warrior Pose</div><div class="feat-desc">Full body alignment check across shoulders, hips and knees.</div></a>
+    <a href="/bmi" class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">BMI Calculator</div><div class="feat-desc">Calculate your Body Mass Index and understand your health category.</div></a>
+  </div>
+</section>
+
+<section class="how-section">
+  <h2 class="section-title">How It Works</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-title">Choose Exercise</div><div class="step-desc">Pick any workout or yoga pose from the menu above.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-title">Allow Camera</div><div class="step-desc">Grant browser camera access — nothing is uploaded to any server.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-title">Start Moving</div><div class="step-desc">AI detects your pose in real time and tracks reps or form.</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-title">Get Feedback</div><div class="step-desc">See instant tips and a full session summary when you finish.</div></div>
+  </div>
+</section>
+
+<div class="home-footer"><p>Made with <span>♥</span> by Team FitHub &nbsp;·&nbsp; AI-powered, privacy-first fitness</p></div>
+
+<script>
+(function(){
+  const canvas=document.getElementById('pose-canvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  const poses=[
+    {name:'Bicep Curl',frames:buildBicep()},
+    {name:'Push-Up',frames:buildPushUp()},
+    {name:'Squat',frames:buildSquat()},
+    {name:'T-Pose',frames:buildTPose()},
+    {name:'Warrior Pose',frames:buildWarrior()},
+    {name:'Tree Pose',frames:buildTree()},
+  ];
+  let poseIdx=0,frameIdx=0,t=0;
+  const FT=22;
+  function lerp(a,b,t){return a+(b-a)*t}
+  function lerpP(a,b,t){const o={};for(const k in a)o[k]=[lerp(a[k][0],b[k][0],t),lerp(a[k][1],b[k][1],t)];return o}
+  function drawFig(pts){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#0d0d0d';ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='rgba(252,109,109,0.06)';ctx.lineWidth=1;
+    for(let x=0;x<W;x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+    for(let y=0;y<H;y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+    const segs=[['head','neck'],['neck','lshoulder'],['neck','rshoulder'],['lshoulder','lelbow'],['lelbow','lwrist'],['rshoulder','relbow'],['relbow','rwrist'],['neck','hip'],['hip','lhip'],['hip','rhip'],['lhip','lknee'],['lknee','lankle'],['rhip','rknee'],['rknee','rankle']];
+    ctx.strokeStyle='#fc6d6d';ctx.lineWidth=5;ctx.lineCap='round';ctx.lineJoin='round';
+    segs.forEach(([a,b])=>{if(!pts[a]||!pts[b])return;ctx.beginPath();ctx.moveTo(pts[a][0],pts[a][1]);ctx.lineTo(pts[b][0],pts[b][1]);ctx.stroke()});
+    Object.values(pts).forEach(([x,y])=>{ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle='#ff9f9f';ctx.fill()});
+    if(pts.head){ctx.beginPath();ctx.arc(pts.head[0],pts.head[1]-16,18,0,Math.PI*2);ctx.strokeStyle='#fc6d6d';ctx.lineWidth=4;ctx.stroke();ctx.fillStyle='rgba(252,109,109,0.07)';ctx.fill()}
+  }
+  function buildBicep(){
+    const b={head:[160,55],neck:[160,95],hip:[160,200],lshoulder:[122,107],rshoulder:[198,107],lelbow:[96,160],relbow:[200,160],lwrist:[96,122],rwrist:[224,220],lhip:[134,242],rhip:[186,242],lknee:[132,308],rknee:[188,308],lankle:[130,370],rankle:[190,370]};
+    const c={...b,lelbow:[96,142],lwrist:[110,106]};
+    return[b,c,b];
+  }
+  function buildPushUp(){
+    const u={head:[170,195],neck:[192,215],hip:[282,244],lshoulder:[156,235],rshoulder:[156,235],lelbow:[120,265],relbow:[120,265],lwrist:[90,280],rwrist:[90,280],lhip:[260,260],rhip:[268,260],lknee:[316,272],rknee:[320,272],lankle:[365,282],rankle:[370,282]};
+    const d={...u,neck:[166,245],lshoulder:[142,260],rshoulder:[142,260],lelbow:[108,278],relbow:[108,278]};
+    return[u,d,u];
+  }
+  function buildSquat(){
+    const s={head:[160,48],neck:[160,88],hip:[160,196],lshoulder:[122,100],rshoulder:[198,100],lelbow:[106,154],relbow:[214,154],lwrist:[100,208],rwrist:[220,208],lhip:[136,234],rhip:[184,234],lknee:[134,304],rknee:[186,304],lankle:[132,370],rankle:[188,370]};
+    const q={...s,hip:[160,236],lhip:[136,256],rhip:[184,256],lknee:[124,316],rknee:[196,316],lankle:[114,364],rankle:[206,364],lelbow:[96,196],relbow:[224,196]};
+    return[s,q,s];
+  }
+  function buildTPose(){
+    const t={head:[160,52],neck:[160,92],hip:[160,205],lshoulder:[122,104],rshoulder:[198,104],lelbow:[62,104],relbow:[258,104],lwrist:[14,104],rwrist:[306,104],lhip:[136,244],rhip:[184,244],lknee:[134,312],rknee:[186,312],lankle:[132,376],rankle:[188,376]};
+    return[t,t,t];
+  }
+  function buildWarrior(){
+    const w={head:[175,78],neck:[178,112],hip:[198,224],lshoulder:[138,124],rshoulder:[218,124],lelbow:[76,124],relbow:[278,124],lwrist:[28,124],rwrist:[328,124],lhip:[156,262],rhip:[240,262],lknee:[126,328],rknee:[276,308],lankle:[108,390],rankle:[306,386]};
+    return[w,w,w];
+  }
+  function buildTree(){
+    const t={head:[160,52],neck:[160,92],hip:[160,205],lshoulder:[122,104],rshoulder:[198,104],lelbow:[104,72],relbow:[216,72],lwrist:[160,48],rwrist:[160,48],lhip:[152,244],rhip:[168,244],lknee:[150,314],rknee:[196,284],lankle:[148,380],rankle:[170,244]};
+    return[t,t,t];
+  }
+  function tick(){
+    const pose=poses[poseIdx];
+    const fA=pose.frames[frameIdx%pose.frames.length];
+    const fB=pose.frames[(frameIdx+1)%pose.frames.length];
+    const a=(t%FT)/FT;
+    const e=a<0.5?2*a*a:-1+(4-2*a)*a;
+    drawFig(lerpP(fA,fB,e));
+    t++;
+    if(t%FT===0){
+      frameIdx=(frameIdx+1)%pose.frames.length;
+      if(frameIdx===0){
+        poseIdx=(poseIdx+1)%poses.length;
+        document.getElementById('pose-name').textContent=poses[poseIdx].name;
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+</script>
+{% endblock %}

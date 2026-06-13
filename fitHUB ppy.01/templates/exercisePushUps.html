@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% block head %}<style>:root{--orange:#fc6d6d;--orange-dark:#e85555;--bg:#0d0d0d;--card:#161616;--border:#222}
+body{background:var(--bg)}
+.ex-wrap{max-width:1200px;margin:0 auto;padding:24px 16px 60px}
+.ex-title{font-family:'Quicksand',sans-serif;font-size:2rem;font-weight:700;color:#fff;text-align:center;margin-bottom:6px}
+.ex-subtitle{font-family:'Quicksand',sans-serif;color:#666;text-align:center;margin-bottom:28px;font-size:0.95rem}
+.ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+@media(max-width:900px){.ex-grid{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.panel-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.panel-dot{width:10px;height:10px;border-radius:50%;background:var(--orange)}
+.panel-title{font-family:'Quicksand',sans-serif;font-size:0.9rem;font-weight:700;color:#aaa;letter-spacing:1px;text-transform:uppercase}
+.panel-body{padding:20px}
+.cam-wrap{position:relative;width:100%;aspect-ratio:4/3;background:#000;border-radius:8px;overflow:hidden}
+.cam-wrap video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cam-wrap canvas{position:absolute;inset:0;width:100%;height:100%}
+.cam-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.cam-placeholder p{font-family:'Quicksand',sans-serif;color:#444;font-size:0.9rem}
+#status-pill{display:inline-block;margin-top:10px;padding:4px 14px;border-radius:20px;font-family:'Quicksand',sans-serif;font-size:0.8rem;font-weight:700;background:rgba(252,109,109,0.12);color:var(--orange);border:1px solid rgba(252,109,109,0.3)}
+.demo-wrap{display:flex;align-items:center;justify-content:center;padding:10px 0}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px;margin-bottom:14px}
+.stat-card{background:#111;border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat-val{font-family:'Quicksand',sans-serif;font-size:2.2rem;font-weight:700;color:var(--orange);line-height:1}
+.stat-lbl{font-family:'Quicksand',sans-serif;font-size:0.72rem;color:#555;letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+.stage-pill{text-align:center;padding:10px;border-radius:10px;font-family:'Quicksand',sans-serif;font-weight:700;font-size:1rem;background:#1a1a1a;color:#555;transition:all 0.3s}
+.stage-pill.up{background:rgba(29,185,84,0.15);color:#1db954;border:1px solid rgba(29,185,84,0.3)}
+.stage-pill.down{background:rgba(252,109,109,0.15);color:var(--orange);border:1px solid rgba(252,109,109,0.3)}
+.instr-list{list-style:none;padding:0}
+.instr-list li{font-family:'Quicksand',sans-serif;font-size:0.9rem;color:#888;padding:8px 0;border-bottom:1px solid #1a1a1a;display:flex;gap:10px;line-height:1.5}
+.instr-list li:last-child{border-bottom:none}
+.instr-num{color:var(--orange);font-weight:700;flex-shrink:0}
+.btn-row{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.btn-start{background:var(--orange);color:#fff;font-family:'Quicksand',sans-serif;font-weight:700;font-size:1rem;padding:13px 36px;border:none;border-radius:50px;cursor:pointer;transition:background 0.2s}
+.btn-start:hover{background:var(--orange-dark)}
+.btn-finish{background:transparent;color:#aaa;font-family:'Quicksand',sans-serif;font-weight:700;font-size:1rem;padding:12px 36px;border:1.5px solid #333;border-radius:50px;cursor:pointer;transition:border-color 0.2s,color 0.2s}
+.btn-finish:hover{border-color:var(--orange);color:var(--orange)}
+.feedback-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center}
+.feedback-overlay.show{display:flex}
+.feedback-box{background:#161616;border:1px solid #333;border-radius:20px;padding:36px;max-width:480px;width:90%;text-align:center}
+.feedback-box h2{font-family:'Quicksand',sans-serif;font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:6px}
+.feedback-box .sub{font-family:'Quicksand',sans-serif;color:#555;margin-bottom:24px;font-size:0.9rem}
+.feedback-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.fb-stat{background:#111;border-radius:12px;padding:16px}
+.fb-stat .v{font-family:'Quicksand',sans-serif;font-size:1.8rem;font-weight:700;color:var(--orange)}
+.fb-stat .l{font-family:'Quicksand',sans-serif;font-size:0.75rem;color:#555;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.feedback-tips{text-align:left;background:#111;border-radius:12px;padding:16px;margin-bottom:20px}
+.feedback-tips h4{font-family:'Quicksand',sans-serif;color:var(--orange);font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.tip-item{font-family:'Quicksand',sans-serif;font-size:0.88rem;color:#888;padding:5px 0;display:flex;gap:8px;line-height:1.5}
+.tip-dot{color:var(--orange);flex-shrink:0}
+.btn-close-fb{background:var(--orange);color:#fff;font-family:'Quicksand',sans-serif;font-weight:700;padding:12px 32px;border:none;border-radius:50px;cursor:pointer;font-size:1rem}
+</style>{% endblock %}
+{% block content %}
+<div class="ex-wrap">
+  <h1 class="ex-title">Push-Ups</h1>
+  <p class="ex-subtitle">Full body tracking · Rep counter · Arm &amp; plank angle</p>
+  <div class="ex-grid">
+    <div class="panel">
+      <div class="panel-header"><div class="panel-dot"></div><span class="panel-title">Live Camera</span></div>
+      <div class="panel-body">
+        <div class="cam-wrap"><video id="webcam" autoplay playsinline></video><canvas id="output"></canvas>
+          <div class="cam-placeholder" id="cam-ph"><svg width="56" height="56" viewBox="0 0 64 64" fill="none"><rect x="4" y="14" width="56" height="42" rx="6" stroke="#fc6d6d" stroke-width="2"/><circle cx="32" cy="35" r="10" stroke="#fc6d6d" stroke-width="2"/><path d="M22 14l4-8h12l4 8" stroke="#fc6d6d" stroke-width="2"/></svg><p>Press START to activate camera</p></div>
+        </div>
+        <div style="text-align:center"><span id="status-pill">Waiting</span></div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-val" id="rep-count">0</div><div class="stat-lbl">Reps</div></div>
+          <div class="stat-card"><div class="stat-val" id="angle-display">--</div><div class="stat-lbl">Arm °</div></div>
+          <div class="stat-card"><div class="stat-val" id="time-el">0s</div><div class="stat-lbl">Time</div></div>
+        </div>
+        <div class="stage-pill" id="stage-display">Ready to start</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><div class="panel-dot"></div><span class="panel-title">How To Do It</span></div>
+      <div class="panel-body">
+        <div class="demo-wrap"><canvas id="demo-canvas" width="240" height="300"></canvas></div>
+        <ul class="instr-list">
+          <li><span class="instr-num">1</span>Start in a plank — hands slightly wider than shoulders.</li>
+          <li><span class="instr-num">2</span>Keep your body like a straight plank from head to heels.</li>
+          <li><span class="instr-num">3</span>Lower until elbow angle drops below 110°.</li>
+          <li><span class="instr-num">4</span>Push through palms to fully extend arms (160°+).</li>
+          <li><span class="instr-num">5</span>Don't let hips sag — squeeze your core throughout.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-start" onclick="startEx()">▶ START</button>
+    <button class="btn-finish" onclick="stopEx()">■ FINISH</button>
+  </div>
+</div>
+<div class="feedback-overlay" id="fb-overlay">
+  <div class="feedback-box">
+    <h2>Session Complete 🎉</h2>
+    <p class="sub">Here's your Push-Up session summary</p>
+    <div class="feedback-stats">
+      <div class="fb-stat"><div class="v" id="fb-reps">0</div><div class="l">Reps</div></div>
+      <div class="fb-stat"><div class="v" id="fb-time">0s</div><div class="l">Duration</div></div>
+    </div>
+    <div class="feedback-tips"><h4>Tips &amp; Feedback</h4><div id="fb-tips"></div></div>
+    <button class="btn-close-fb" onclick="document.getElementById('fb-overlay').classList.remove('show')">Done</button>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+<script>
+(function(){
+  const dc=document.getElementById('demo-canvas'),dctx=dc.getContext('2d');
+  let dt=0;
+  const up={neck:[185,108],hip:[270,136],lshoulder:[150,126],rshoulder:[150,126],lelbow:[116,152],relbow:[116,152],lwrist:[88,166],rwrist:[88,166],lhip:[252,148],rhip:[258,148],lknee:[304,162],rknee:[308,162],lankle:[348,172],rankle:[352,172]};
+  const down={...up,neck:[168,136],lshoulder:[134,154],rshoulder:[134,154],lelbow:[104,168],relbow:[104,168]};
+  function lerp(a,b,t){return a+(b-a)*t}
+  function lerpP(a,b,t){const o={};for(const k in a)o[k]=[lerp(a[k][0],b[k][0],t),lerp(a[k][1],b[k][1],t)];return o}
+  function draw(pts){
+    dctx.clearRect(0,0,dc.width,dc.height);dctx.fillStyle='#111';dctx.fillRect(0,0,dc.width,dc.height);
+    const segs=[['neck','lshoulder'],['lshoulder','lelbow'],['lelbow','lwrist'],['neck','hip'],['lhip','lknee'],['lknee','lankle'],['hip','lhip']];
+    dctx.strokeStyle='#fc6d6d';dctx.lineWidth=4;dctx.lineCap='round';
+    segs.forEach(([a,b])=>{if(!pts[a]||!pts[b])return;dctx.beginPath();dctx.moveTo(pts[a][0],pts[a][1]);dctx.lineTo(pts[b][0],pts[b][1]);dctx.stroke()});
+    Object.values(pts).forEach(([x,y])=>{dctx.beginPath();dctx.arc(x,y,4,0,Math.PI*2);dctx.fillStyle='#ff9f9f';dctx.fill()});
+    if(pts.neck){dctx.beginPath();dctx.arc(pts.neck[0]-14,pts.neck[1],12,0,Math.PI*2);dctx.strokeStyle='#fc6d6d';dctx.lineWidth=3;dctx.stroke();}
+    const prog=(Math.sin(dt*0.04)+1)/2;
+    dctx.fillStyle='rgba(252,109,109,0.15)';dctx.fillRect(4,270,dc.width-8,26);
+    dctx.fillStyle='#fc6d6d';dctx.font='bold 12px Quicksand,sans-serif';dctx.textAlign='center';
+    dctx.fillText('Arm angle: '+Math.round(160-(160-100)*prog)+'°',dc.width/2,287);
+  }
+  function tick(){draw(lerpP(up,down,(Math.sin(dt*0.04)+1)/2));dt++;requestAnimationFrame(tick);}
+  tick();
+})();
+const video=document.getElementById('webcam'),canvas=document.getElementById('output'),ctx=canvas.getContext('2d');
+let counter=0,upPos=null,downPos=null,camera=null,running=false,elapsed=0,timer=null;
+function ang(a,b,c){const r=Math.atan2(c[1]-b[1],c[0]-b[0])-Math.atan2(a[1]-b[1],a[0]-b[0]);let v=Math.abs(r*180/Math.PI);return v>180?360-v:v}
+const pose=new Pose({locateFile:f=>'https://cdn.jsdelivr.net/npm/@mediapipe/pose/'+f});
+pose.setOptions({modelComplexity:1,smoothLandmarks:true,minDetectionConfidence:0.7,minTrackingConfidence:0.5});
+pose.onResults(res=>{
+  canvas.width=video.videoWidth||640;canvas.height=video.videoHeight||480;
+  ctx.save();ctx.scale(-1,1);ctx.translate(-canvas.width,0);ctx.drawImage(res.image,0,0,canvas.width,canvas.height);ctx.restore();
+  if(res.poseLandmarks){
+    const lm=res.poseLandmarks;
+    const armA=Math.round(ang([lm[11].x,lm[11].y],[lm[13].x,lm[13].y],[lm[15].x,lm[15].y]));
+    const legA=Math.round(ang([lm[23].x,lm[23].y],[lm[25].x,lm[25].y],[lm[27].x,lm[27].y]));
+    if(armA>160&&legA<167)upPos='Up';
+    if(armA<110&&upPos==='Up')downPos='Down';
+    if(armA>160&&downPos==='Down'){counter++;upPos=null;downPos=null;}
+    drawConnectors(ctx,res.poseLandmarks,POSE_CONNECTIONS,{color:'#fc6d6d',lineWidth:2});
+    drawLandmarks(ctx,res.poseLandmarks,{color:'#ff9f9f',lineWidth:1,radius:3});
+    document.getElementById('rep-count').textContent=counter;
+    document.getElementById('angle-display').textContent=armA;
+    const sd=document.getElementById('stage-display');
+    const s=downPos==='Down'?'DOWN':upPos==='Up'?'UP':'—';
+    sd.textContent=s;sd.className='stage-pill '+(s==='UP'?'up':s==='DOWN'?'down':'');
+  }
+});
+function startEx(){
+  if(running)return;running=true;counter=0;upPos=null;downPos=null;elapsed=0;
+  document.getElementById('cam-ph').style.display='none';
+  document.getElementById('status-pill').textContent='Active';
+  const st=Date.now();
+  timer=setInterval(()=>{elapsed=Math.round((Date.now()-st)/1000);document.getElementById('time-el').textContent=elapsed+'s';},1000);
+  camera=new Camera(video,{onFrame:async()=>{await pose.send({image:video});},width:640,height:480});
+  camera.start().catch(()=>{document.getElementById('status-pill').textContent='Error';running=false;});
+}
+function stopEx(){
+  if(camera){camera.stop();camera=null;}if(timer){clearInterval(timer);timer=null;}
+  running=false;ctx.clearRect(0,0,canvas.width,canvas.height);
+  document.getElementById('status-pill').textContent='Finished';
+  const tips=[];
+  if(counter===0)tips.push({t:'No reps detected',d:'Try lying parallel to camera so your arms are fully visible.'});
+  else if(counter>=10)tips.push({t:'Excellent!',d:'Great push-up volume. Try slowing down for more muscle tension.'});
+  else tips.push({t:'Good work',d:'Aim for 10–20 reps per set as you build strength.'});
+  if(elapsed>0&&counter>0&&elapsed/counter<1.5)tips.push({t:'Control the pace',d:'Spend 2s lowering and 1s pushing for maximum benefit.'});
+  tips.push({t:'Core reminder',d:'Keep your abs tight throughout — this protects your lower back.'});
+  document.getElementById('fb-reps').textContent=counter;
+  document.getElementById('fb-time').textContent=elapsed+'s';
+  document.getElementById('fb-tips').innerHTML=tips.map(t=>'<div class="tip-item"><span class="tip-dot">▸</span><span><strong style="color:#ddd">'+t.t+':</strong> '+t.d+'</span></div>').join('');
+  document.getElementById('fb-overlay').classList.add('show');
+}
+</script>
+{% endblock %}

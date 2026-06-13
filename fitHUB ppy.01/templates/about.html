@@ -1,0 +1,35 @@
+{% extends 'base.html' %} 
+
+{% block content %}  
+<br>
+<h3 id="myp" align="center">Welcome to our AI-based yoga trainer website, where technology meets mindfulness to help you achieve your fitness goals.</h3>
+<br>
+<hr id="f">
+<br><br>
+<div class="card-container">
+    <div class="card">
+        <img src="{{url_for('static',filename='images/aboutpic1.jpeg')}}" alt="Instagram">
+      <div class="card-text">
+        <h2>Yoga Guruji</h2>
+        <p>Experience yoga like never before with our app's revolutionary computer vision technology. Seamlessly follow along with guided routines as our app effortlessly recognizes and classifies various yoga poses. Whether you're a novice or a seasoned practitioner, personalized feedback and guidance await you. Our standout feature? Real-time pose correction. By analyzing your movements and aligning them with ideal form, we safeguard against potential injuries and maximize the benefits of each posture. Embrace a safer, more rewarding yoga journey with us.</p>
+      </div>
+    </div>
+    
+    
+    <div class="card">
+        <img src="{{url_for('static',filename='images/aboutpic2.jpeg')}}" alt="Instagram">
+      <div class="card-text">
+        <h2>Exercise Trainer</h2>
+        <p>Our app counts the number of times you complete each exercise, so you can easily track your progress over time. Whether you're aiming to do more reps, lift heavier weights, or simply maintain your current fitness level, our repetition tracking feature makes it easy to monitor your progress and stay motivated. That's why our app provides real-time feedback on your form as you exercise. Our app analyzes your movements and corrects your form if you're doing an exercise incorrectly. 
+          With our form correction feature, you're getting the most out of every workout and reducing your risk of injury.</p>
+      </div>
+    </div> 
+  </div>
+  
+    <footer1 class="ll">
+        <p></p>
+     
+       
+      </footer1>  
+ 
+{% endblock %}  
